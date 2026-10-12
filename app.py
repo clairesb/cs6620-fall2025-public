@@ -7,6 +7,9 @@ from flask_cors import CORS
 from pydub import AudioSegment
 import tempfile
 
+# Version: 1.01
+# Built with GitHub Actions (hopefully haha)
+
 app = Flask(__name__)
 CORS(app)
 
