@@ -53,7 +53,7 @@ jobs:
       - name: Deploy to EC2 via SSM
         id: deploy
         run: |
-          IMAGE="${{ secrets.DOCKERHUB_USERNAME }}/cs6220-app:latest"
+          IMAGE="${{ secrets.DOCKERHUB_USERNAME }}/cs6620-app:latest"
 
           cat > params.json <<EOF
           {
