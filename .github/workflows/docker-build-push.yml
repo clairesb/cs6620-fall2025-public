@@ -59,8 +59,8 @@ jobs:
           {
             "commands": [
               "docker pull $IMAGE",
-              "docker stop audio-appt || true",
-              "docker rm audio-appt || true",
+              "docker stop cs6620-app || true",
+              "docker rm cs6620-app || true",
               "docker run -d --name cs6620-app --restart unless-stopped -p 80:5000 $IMAGE"
             ]
           }
