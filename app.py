@@ -6,6 +6,7 @@ from flask import Flask, render_template, request, jsonify, send_from_directory,
 from flask_cors import CORS
 from pydub import AudioSegment
 import tempfile
+from datetime import datetime
 
 # Version: 1.01
 # Built with GitHub Actions (hopefully haha)
@@ -157,6 +158,7 @@ def health():
         'status': 'healthy',
         'version': '2.0',
         'deployment_method': 'automated',
+        'timestamp': datetime.now().isoformat()
     }
 
 @app.route('/select_directory', methods=['POST'])
