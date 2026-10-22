@@ -53,19 +53,30 @@ jobs:
       - name: Deploy to EC2 via SSM
         id: deploy
         run: |
+          IMAGE="${{ secrets.DOCKERHUB_USERNAME }}/cs6220-app:latest"
+
+          cat > params.json <<EOF
+          {
+            "commands": [
+              "docker pull $IMAGE",
+              "docker stop audio-appt || true",
+              "docker rm audio-appt || true",
+              "docker run -d --name audio-appt --restart unless-stopped -p 80:5000 $IMAGE"
+            ]
+          }
+          EOF
+
           COMMAND_ID=$(aws ssm send-command \
             --instance-ids "${{ secrets.EC2_INSTANCE_ID }}" \
             --document-name "AWS-RunShellScript" \
             --comment "Deploy latest Docker image from Docker Hub" \
-            --parameters 'commands=[
-              "docker pull ${{ secrets.DOCKERHUB_USERNAME }}/cs6620-app:latest",
-              "docker stop my-app || true",
-              "docker rm my-app || true",
-              "docker run -d --name cs6620-app --restart unless-stopped -p 80:5000 ${{ secrets.DOCKERHUB_USERNAME }}/cs6620-app:latest"
-            ]' \
+            --parameters file://params.json \
             --region "${{ secrets.AWS_REGION }}" \
             --query "Command.CommandId" \
             --output text)
+
+          echo "command_id=$COMMAND_ID" >> "$GITHUB_OUTPUT"
+          echo "SSM command sent: $COMMAND_ID"
             
       - name: Verify deployment
         run: |
